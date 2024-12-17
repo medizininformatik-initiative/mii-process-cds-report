@@ -152,6 +152,11 @@ public class FhirClientConfig
 	@Value("${de.medizininformatik.initiative.report.dic.fhir.dataLoggingEnabled:false}")
 	private boolean fhirDataLoggingEnabled;
 
+	@ProcessDocumentation(processNames = {
+			"medizininformatik-initiativede_reportSend" }, description = "Result polling interval in seconds for asynchronous request pattern when executing search bundle requests")
+	@Value("${de.medizininformatik.initiative.report.dic.fhir.async.polling.interval:10}")
+	private int fhirAsyncPollingInterval;
+
 	@Value("${dev.dsf.bpe.fhir.server.organization.identifier.value}")
 	private String localIdentifierValue;
 
@@ -175,7 +180,8 @@ public class FhirClientConfig
 		return new FhirClientFactory(trustStorePath, certificatePath, privateKeyPath, fhirStorePrivateKeyPassword,
 				fhirStoreConnectTimeout, fhirStoreSocketTimeout, fhirStoreConnectionRequestTimeout, fhirStoreBaseUrl,
 				fhirStoreUsername, fhirStorePassword, fhirStoreBearerToken, tokenProvider(), proxyUrl, proxyUsername,
-				proxyPassword, fhirStoreHapiClientVerbose, fhirContext, localIdentifierValue, dataLogger());
+				proxyPassword, fhirStoreHapiClientVerbose, fhirAsyncPollingInterval, fhirContext, localIdentifierValue,
+				dataLogger());
 	}
 
 	public TokenProvider tokenProvider()
