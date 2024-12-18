@@ -96,7 +96,7 @@ public class CreateReport extends AbstractServiceDelegate implements Initializin
 	private Bundle executeSearchBundle(Bundle searchBundle, String hrpIdentifier)
 	{
 		logger.info(
-				"Executing search Bundle from HRP '{}' against FHIR store with base url '{}' - this could take a while...",
+				"Executing search Bundle from HRP '{}' against FHIR store with base URL '{}' - this could take a while...",
 				hrpIdentifier, fhirClientFactory.getFhirBaseUrl());
 
 		Bundle responseBundle = new Bundle();
@@ -119,12 +119,7 @@ public class CreateReport extends AbstractServiceDelegate implements Initializin
 		{
 			logger.debug("Executing report search request '{}' with {}", url,
 					fhirAsyncRequestsEnabled ? "asnyc request pattern" : "normal request pattern");
-
-			Resource result = null;
-			if (fhirAsyncRequestsEnabled)
-				result = fhirClientFactory.getAsyncFhirClient().search(url);
-			else
-				result = fhirClientFactory.getStandardFhirClient().search(url);
+			Resource result = doExecuteRequest(url);
 
 			entry.setResource(result);
 			entry.setResponse(new Bundle.BundleEntryResponseComponent().setStatus(RESPONSE_OK));
@@ -143,6 +138,14 @@ public class CreateReport extends AbstractServiceDelegate implements Initializin
 		}
 
 		return entry;
+	}
+
+	private Resource doExecuteRequest(String url)
+	{
+		if (fhirAsyncRequestsEnabled)
+			return fhirClientFactory.getAsyncFhirClient().search(url);
+		else
+			return fhirClientFactory.getStandardFhirClient().search(url);
 	}
 
 	private Bundle transformToReportBundle(Bundle searchBundle, Bundle responseBundle, Target target)

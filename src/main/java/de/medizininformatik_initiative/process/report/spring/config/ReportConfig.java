@@ -44,7 +44,7 @@ public class ReportConfig
 
 	@ProcessDocumentation(processNames = {
 			"medizininformatik-initiativede_reportSend" }, description = "To enable asynchronous request pattern when executing search bundle requests set to `true`")
-	@Value("${de.medizininformatik.initiative.report.dic.fhir.async.enabled:false}")
+	@Value("${de.medizininformatik.initiative.report.dic.fhir.server.async.enabled:false}")
 	private boolean fhirAsyncEnabled;
 
 	// all Processes
