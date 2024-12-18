@@ -39,15 +39,17 @@ public class CreateReport extends AbstractServiceDelegate implements Initializin
 
 	private final String resourceVersion;
 	private final FhirClientFactory fhirClientFactory;
+	private final boolean fhirAsyncRequestsEnabled;
 	private final DataLogger dataLogger;
 
 	public CreateReport(ProcessPluginApi api, String resourceVersion, FhirClientFactory fhirClientFactory,
-			DataLogger dataLogger)
+			boolean fhirAsyncRequestsEnabled, DataLogger dataLogger)
 	{
 		super(api);
 
 		this.resourceVersion = resourceVersion;
 		this.fhirClientFactory = fhirClientFactory;
+		this.fhirAsyncRequestsEnabled = fhirAsyncRequestsEnabled;
 		this.dataLogger = dataLogger;
 	}
 
@@ -94,8 +96,8 @@ public class CreateReport extends AbstractServiceDelegate implements Initializin
 	private Bundle executeSearchBundle(Bundle searchBundle, String hrpIdentifier)
 	{
 		logger.info(
-				"Executing search Bundle from HRP '{}' against FHIR store with base url '{}' - this could take a while...",
-				hrpIdentifier, fhirClientFactory.getFhirClient().getFhirBaseUrl());
+				"Executing search Bundle from HRP '{}' against FHIR store with base URL '{}' - this could take a while...",
+				hrpIdentifier, fhirClientFactory.getFhirBaseUrl());
 
 		Bundle responseBundle = new Bundle();
 		responseBundle.setType(Bundle.BundleType.BATCHRESPONSE);
@@ -115,9 +117,10 @@ public class CreateReport extends AbstractServiceDelegate implements Initializin
 
 		try
 		{
-			logger.debug("Executing report search request '{}'", url);
+			logger.debug("Executing report search request '{}' with {}", url,
+					fhirAsyncRequestsEnabled ? "asnyc request pattern" : "normal request pattern");
+			Resource result = doExecuteRequest(url);
 
-			Resource result = fhirClientFactory.getFhirClient().search(url);
 			entry.setResource(result);
 			entry.setResponse(new Bundle.BundleEntryResponseComponent().setStatus(RESPONSE_OK));
 		}
@@ -135,6 +138,14 @@ public class CreateReport extends AbstractServiceDelegate implements Initializin
 		}
 
 		return entry;
+	}
+
+	private Resource doExecuteRequest(String url)
+	{
+		if (fhirAsyncRequestsEnabled)
+			return fhirClientFactory.getAsyncFhirClient().search(url);
+		else
+			return fhirClientFactory.getStandardFhirClient().search(url);
 	}
 
 	private Bundle transformToReportBundle(Bundle searchBundle, Bundle responseBundle, Target target)
