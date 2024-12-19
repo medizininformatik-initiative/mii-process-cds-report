@@ -44,7 +44,6 @@ public interface ConstantsReport
 
 	String CODESYSTEM_REPORT = "http://medizininformatik-initiative.de/fhir/CodeSystem/report";
 
-	String CODESYSTEM_REPORT_VALUE_SEARCH_BUNDLE = "search-bundle-v";
 	String CODESYSTEM_REPORT_VALUE_SEARCH_BUNDLE_RESPONSE_REFERENCE = "search-bundle-response-reference";
 	String CODESYSTEM_REPORT_VALUE_REPORT_STATUS = "report-status";
 	String CODESYSTEM_REPORT_VALUE_TIMER_INTERVAL = "timer-interval";
@@ -61,6 +60,8 @@ public interface ConstantsReport
 	String CODESYSTEM_REPORT_STATUS_VALUE_RECEIVE_ERROR = "receive-error";
 
 	String NAMINGSYSTEM_CDS_REPORT_IDENTIFIER = "http://medizininformatik-initiative.de/sid/cds-report-identifier";
+	String NAMINGSYSTEM_SEARCH_BUNDLE_IDENTIFIER = "http://medizininformatik-initiative.de/sid/search-bundle-identifier";
+	String NAMINGSYSTEM_SEARCH_BUNDLE_IDENTIFIER_VALUE_PREFIX = "search-bundle-v";
 
 	String PROFILE_REPORT_SEARCH_BUNDLE_RESPONSE = "http://medizininformatik-initiative.de/fhir/Bundle/search-bundle-response-report";
 	String EXTENSION_REPORT_STATUS_ERROR_URL = "http://medizininformatik-initiative.de/fhir/StructureDefinition/extension-report-status-error";
