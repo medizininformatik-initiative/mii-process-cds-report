@@ -42,6 +42,11 @@ public class ReportConfig
 	@Value("${de.medizininformatik.initiative.report.dic.hrp.identifier:#{null}}")
 	private String hrpIdentifier;
 
+	@ProcessDocumentation(processNames = {
+			"medizininformatik-initiativede_reportSend" }, description = "To enable asynchronous request pattern when executing search bundle requests set to `true`")
+	@Value("${de.medizininformatik.initiative.report.dic.fhir.server.async.enabled:false}")
+	private boolean fhirAsyncEnabled;
+
 	// all Processes
 
 	@Bean
@@ -110,7 +115,7 @@ public class ReportConfig
 	public CreateReport createReport()
 	{
 		String resourceVersion = new ReportProcessPluginDefinition().getResourceVersion();
-		return new CreateReport(api, resourceVersion, fhirClientConfig.fhirClientFactory(),
+		return new CreateReport(api, resourceVersion, fhirClientConfig.fhirClientFactory(), fhirAsyncEnabled,
 				fhirClientConfig.dataLogger());
 	}
 
