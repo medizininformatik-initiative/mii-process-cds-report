@@ -69,12 +69,13 @@ public class CreateReport extends AbstractServiceDelegate implements Initializin
 		Task task = variables.getStartTask();
 		Bundle searchBundle = variables.getResource(ConstantsReport.BPMN_EXECUTION_VARIABLE_REPORT_SEARCH_BUNDLE);
 		Target target = variables.getTarget();
+		boolean isDryRun = variables.getBoolean(ConstantsReport.BPMN_EXECUTION_VARIABLE_IS_DRY_RUN);
 
 		try
 		{
 			Bundle responseBundle = executeSearchBundle(searchBundle, target.getOrganizationIdentifierValue());
 
-			Bundle reportBundle = transformToReportBundle(searchBundle, responseBundle, target);
+			Bundle reportBundle = transformToReportBundle(searchBundle, responseBundle, target, isDryRun);
 			dataLogger.logResource("Report Bundle", reportBundle);
 
 			checkReportBundle(searchBundle, reportBundle, target.getOrganizationIdentifierValue());
@@ -148,7 +149,7 @@ public class CreateReport extends AbstractServiceDelegate implements Initializin
 			return fhirClientFactory.getStandardFhirClient().search(url);
 	}
 
-	private Bundle transformToReportBundle(Bundle searchBundle, Bundle responseBundle, Target target)
+	private Bundle transformToReportBundle(Bundle searchBundle, Bundle responseBundle, Target target, boolean isDryRun)
 	{
 		Bundle report = new Bundle();
 		report.setMeta(responseBundle.getMeta());
@@ -161,7 +162,8 @@ public class CreateReport extends AbstractServiceDelegate implements Initializin
 						.orElseThrow(() -> new RuntimeException("LocalOrganizationIdentifierValue empty"))));
 
 		api.getReadAccessHelper().addLocal(report);
-		api.getReadAccessHelper().addOrganization(report, target.getOrganizationIdentifierValue());
+		if (!isDryRun)
+			api.getReadAccessHelper().addOrganization(report, target.getOrganizationIdentifierValue());
 
 		for (int i = 0; i < searchBundle.getEntry().size(); i++)
 		{

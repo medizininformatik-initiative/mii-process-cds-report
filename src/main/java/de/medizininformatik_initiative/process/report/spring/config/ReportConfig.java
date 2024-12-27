@@ -18,6 +18,7 @@ import de.medizininformatik_initiative.process.report.service.DownloadReport;
 import de.medizininformatik_initiative.process.report.service.DownloadSearchBundle;
 import de.medizininformatik_initiative.process.report.service.HandleError;
 import de.medizininformatik_initiative.process.report.service.InsertReport;
+import de.medizininformatik_initiative.process.report.service.LogDryRun;
 import de.medizininformatik_initiative.process.report.service.SelectTargetDic;
 import de.medizininformatik_initiative.process.report.service.SelectTargetHrp;
 import de.medizininformatik_initiative.process.report.service.SetTimer;
@@ -117,6 +118,13 @@ public class ReportConfig
 		String resourceVersion = new ReportProcessPluginDefinition().getResourceVersion();
 		return new CreateReport(api, resourceVersion, fhirClientConfig.fhirClientFactory(), fhirAsyncEnabled,
 				fhirClientConfig.dataLogger());
+	}
+
+	@Bean
+	@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+	public LogDryRun logDryRun()
+	{
+		return new LogDryRun(api, reportStatusGenerator());
 	}
 
 	@Bean

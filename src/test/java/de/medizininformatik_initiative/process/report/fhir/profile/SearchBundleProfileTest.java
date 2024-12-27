@@ -14,9 +14,7 @@ import org.slf4j.LoggerFactory;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import ca.uhn.fhir.validation.ValidationResult;
-
 import de.medizininformatik_initiative.process.report.ReportProcessPluginDefinition;
-
 import dev.dsf.fhir.validation.ResourceValidator;
 import dev.dsf.fhir.validation.ResourceValidatorImpl;
 import dev.dsf.fhir.validation.ValidationSupportRule;
@@ -28,8 +26,7 @@ public class SearchBundleProfileTest
 
 	@ClassRule
 	public static final ValidationSupportRule validationRule = new ValidationSupportRule(def.getResourceVersion(),
-			def.getResourceReleaseDate(),
-			List.of("search-bundle-report.xml", "search-bundle-response-report.xml"),
+			def.getResourceReleaseDate(), List.of("search-bundle-report.xml", "search-bundle-response-report.xml"),
 			List.of("report.xml", "report-status.xml"),
 			List.of("report.xml", "report-status-receive.xml", "report-status-send.xml"));
 
@@ -64,7 +61,7 @@ public class SearchBundleProfileTest
 	{
 		try (InputStream in = getClass().getResourceAsStream(path))
 		{
-			return  FhirContext.forR4().newXmlParser().parseResource(Bundle.class, in);
+			return FhirContext.forR4().newXmlParser().parseResource(Bundle.class, in);
 		}
 		catch (Exception exception)
 		{
