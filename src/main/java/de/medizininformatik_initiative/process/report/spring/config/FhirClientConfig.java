@@ -103,9 +103,14 @@ public class FhirClientConfig
 	private String fhirStoreProxyPassword;
 
 	@ProcessDocumentation(processNames = {
-			"medizininformatik-initiativede_reportSend" }, description = "The url of the oidc provider to request access tokens (token endpoint)", example = "http://foo.baz/realms/fhir-realm/protocol/openid-connect/token")
+			"medizininformatik-initiativede_reportSend" }, description = "The base url of the oidc provider", example = "http://foo.baz/realms/fhir-realm")
 	@Value("${de.medizininformatik.initiative.report.dic.fhir.server.oauth2.issuer.url:#{null}}")
 	private String fhirStoreOAuth2IssuerUrl;
+
+	@ProcessDocumentation(processNames = {
+			"medizininformatik-initiativede_reportSend" }, description = "The path for oidc discovery protocol", recommendation = "Change default value only if path is differs from the oidc specification")
+	@Value("${de.medizininformatik.initiative.report.dic.fhir.server.oauth2.discovery.path:/.well-known/openid-configuration}")
+	private String fhirStoreOAuth2DiscoveryPath;
 
 	@ProcessDocumentation(processNames = {
 			"medizininformatik-initiativede_reportSend" }, description = "Identifier of the client (username) used for authentication when accessing the oidc provider token endpoint")
@@ -198,9 +203,9 @@ public class FhirClientConfig
 					: new String(api.getProxyConfig().getPassword());
 		}
 
-		return new OAuth2TokenClient(fhirStoreOAuth2IssuerUrl, fhirStoreOAuth2ClientId, fhirStoreOAuth2ClientSecret,
-				fhirStoreOAuth2ConnectTimeout, fhirStoreOAuth2SocketTimeout, trustStoreOAuth2Path, proxyUrl,
-				proxyUsername, proxyPassword);
+		return new OAuth2TokenClient(fhirStoreOAuth2IssuerUrl, fhirStoreOAuth2DiscoveryPath, fhirStoreOAuth2ClientId,
+				fhirStoreOAuth2ClientSecret, fhirStoreOAuth2ConnectTimeout, fhirStoreOAuth2SocketTimeout,
+				trustStoreOAuth2Path, proxyUrl, proxyUsername, proxyPassword);
 	}
 
 	public DataLogger dataLogger()
